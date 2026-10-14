@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Base Charge Calculator</title>
+  <style>
+    body{font-family:Arial,sans-serif;max-width:520px;margin:24px auto;padding:16px;color:#202124}
+    h2{margin-bottom:8px}p{color:#5f6368}
+    label{display:block;margin:12px 0 5px;font-size:14px}
+    input{width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:16px}
+    .result{margin-top:18px;padding:14px;background:#f5f7fa;border-radius:8px;line-height:1.8}
+    .total{font-size:18px;font-weight:bold}
+  </style>
+</head>
+<body>
+  <h2>Base Charge Calculator</h2>
+  <p>Enter the MRP, discount and GST rates. Results update automatically.</p>
+
+  <label for="mrp">MRP (₹)</label>
+  <input id="mrp" type="number" min="0" step="0.01" value="256">
+
+  <label for="discount">Discount (%)</label>
+  <input id="discount" type="number" min="0" max="100" step="0.01" value="0">
+
+  <label for="cgst">CGST (%)</label>
+  <input id="cgst" type="number" min="0" step="0.01" value="2.5">
+
+  <label for="sgst">SGST (%)</label>
+  <input id="sgst" type="number" min="0" step="0.01" value="2.5">
+
+  <div class="result" aria-live="polite">
+    Base Charge: <strong id="base">₹243.81</strong><br>
+    Discount Amount: <strong id="adjustment">₹0.00</strong><br>
+    Taxable Amount: <strong id="taxable">₹243.81</strong><br>
+    CGST Amount: <strong id="cgstAmount">₹6.10</strong><br>
+    SGST Amount: <strong id="sgstAmount">₹6.10</strong><br>
+    Total GST: <strong id="gst">₹12.19</strong><br>
+    <div class="total">Final Amount: <span id="final">₹256.00</span></div>
+  </div>
+
+  <script>
+    const el = id => document.getElementById(id);
+    const num = id => Math.max(0, Number(el(id).value) || 0);
+    const money = n => "₹" + n.toFixed(2);
+
+    function calculate() {
+      const mrp = num("mrp");
+      const discountRate = Math.min(100, num("discount"));
+      const cgstRate = num("cgst");
+      const sgstRate = num("sgst");
+      const base = mrp / (1 + (cgstRate + sgstRate) / 100);
+      const adjustment = base * discountRate / 100;
+      const taxable = base - adjustment;
+      const cgstAmount = taxable * cgstRate / 100;
+      const sgstAmount = taxable * sgstRate / 100;
+      const gst = cgstAmount + sgstAmount;
+      const finalAmount = taxable + gst;
+
+      el("base").textContent = money(base);
+      el("adjustment").textContent = money(adjustment);
+      el("taxable").textContent = money(taxable);
+      el("cgstAmount").textContent = money(cgstAmount);
+      el("sgstAmount").textContent = money(sgstAmount);
+      el("gst").textContent = money(gst);
+      el("final").textContent = money(finalAmount);
+    }
+
+    ["mrp", "discount", "cgst", "sgst"].forEach(id =>
+      el(id).addEventListener("input", calculate)
+    );
+    calculate();
+  </script>
+</body>
+</html>

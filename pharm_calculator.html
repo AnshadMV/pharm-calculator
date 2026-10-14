@@ -1,75 +1,56 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Base Charge Calculator</title>
-  <style>
-    body{font-family:Arial,sans-serif;max-width:520px;margin:24px auto;padding:16px;color:#202124}
-    h2{margin-bottom:8px}p{color:#5f6368}
-    label{display:block;margin:12px 0 5px;font-size:14px}
-    input{width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccc;border-radius:6px;font-size:16px}
-    .result{margin-top:18px;padding:14px;background:#f5f7fa;border-radius:8px;line-height:1.8}
-    .total{font-size:18px;font-weight:bold}
-  </style>
-</head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123b75">
+<meta name="description" content="Live pharmacy GST billing calculator with discount and IP GST-included handling.">
+<title>Pharmacy Billing Calculator</title>
+<style>
+:root{--navy:#123b75;--blue:#2563eb;--ink:#172033;--muted:#64748b;--line:#dbe3ef;--bg:#f3f6fb;--green:#087443}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}header{background:linear-gradient(120deg,#102f5f,#1d4ed8);color:white;padding:27px 18px}header>div,main{max-width:960px;margin:auto}.eyebrow{font-size:.75rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;opacity:.8}h1{font-size:clamp(1.6rem,4vw,2.25rem);line-height:1.15;margin:8px 0}header p{margin:8px 0 0;color:#e4edff}main{padding:18px 13px 35px}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:19px;margin-bottom:15px;box-shadow:0 5px 18px #17365d0a}.card h2{font-size:1.08rem;margin:0 0 4px}.sub,.note{color:var(--muted);font-size:.86rem}.sub{margin:0 0 16px}.fields,.mode-grid,.results{display:grid;gap:12px}.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.field label{display:block;font-size:.84rem;font-weight:700;margin-bottom:5px}input,select{width:100%;min-height:44px;border:1px solid #cbd5e1;border-radius:9px;padding:9px 11px;font:inherit;background:white;color:var(--ink)}input:focus,select:focus{outline:3px solid #bfdbfe;border-color:var(--blue)}.hint{font-size:.74rem;color:var(--muted)}.mode-grid{grid-template-columns:1fr}.switch{display:flex;gap:10px;padding:12px;border:1px solid var(--line);background:#f8fafc;border-radius:10px}.switch input{width:18px;min-height:18px;margin:3px 0 0}.switch label{font-weight:750}.switch small{display:block;color:var(--muted);font-weight:400}.status{margin-top:12px;padding:10px 12px;border-radius:9px;background:#f1f5f9;color:#334155;font-size:.85rem}.status.active{background:#ecfdf5;color:#065f46}.status.warn{background:#fff7ed;color:#9a3412}.results{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:12px;background:#f8fafc;border:1px solid #e7edf5;border-radius:10px;min-width:0}.metric span{display:block;font-size:.76rem;color:var(--muted);margin-bottom:4px}.metric strong{font-size:1.08rem;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.metric.final{grid-column:1/-1;background:var(--navy);border-color:var(--navy);color:white;padding:17px}.metric.final span{color:#dbeafe}.metric.final strong{font-size:1.75rem}.metric.contract{background:#edf4ff;border-color:#c7d9ff}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.85rem}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#f8fafc}code{font-family:ui-monospace,Consolas,monospace;font-size:.82em;overflow-wrap:anywhere}.example{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:12px;margin-top:12px}footer{text-align:center;color:var(--muted);font-size:.76rem;padding:0 12px 22px}@media(min-width:650px){.fields{grid-template-columns:repeat(4,minmax(0,1fr))}.mode-grid{grid-template-columns:1fr 1fr}.results{grid-template-columns:repeat(3,minmax(0,1fr))}.metric.final{grid-column:span 2}}@media(max-width:390px){.card{padding:14px}.fields{grid-template-columns:1fr}.metric strong{font-size:1rem}}
+</style></head>
 <body>
-  <h2>Base Charge Calculator</h2>
-  <p>Enter the MRP, discount and GST rates. Results update automatically.</p>
-
-  <label for="mrp">MRP (₹)</label>
-  <input id="mrp" type="number" min="0" step="0.01" value="256">
-
-  <label for="discount">Discount (%)</label>
-  <input id="discount" type="number" min="0" max="100" step="0.01" value="0">
-
-  <label for="cgst">CGST (%)</label>
-  <input id="cgst" type="number" min="0" step="0.01" value="2.5">
-
-  <label for="sgst">SGST (%)</label>
-  <input id="sgst" type="number" min="0" step="0.01" value="2.5">
-
-  <div class="result" aria-live="polite">
-    Base Charge: <strong id="base">₹243.81</strong><br>
-    Discount Amount: <strong id="adjustment">₹0.00</strong><br>
-    Taxable Amount: <strong id="taxable">₹243.81</strong><br>
-    CGST Amount: <strong id="cgstAmount">₹6.10</strong><br>
-    SGST Amount: <strong id="sgstAmount">₹6.10</strong><br>
-    Total GST: <strong id="gst">₹12.19</strong><br>
-    <div class="total">Final Amount: <span id="final">₹256.00</span></div>
-  </div>
-
-  <script>
-    const el = id => document.getElementById(id);
-    const num = id => Math.max(0, Number(el(id).value) || 0);
-    const money = n => "₹" + n.toFixed(2);
-
-    function calculate() {
-      const mrp = num("mrp");
-      const discountRate = Math.min(100, num("discount"));
-      const cgstRate = num("cgst");
-      const sgstRate = num("sgst");
-      const base = mrp / (1 + (cgstRate + sgstRate) / 100);
-      const adjustment = base * discountRate / 100;
-      const taxable = base - adjustment;
-      const cgstAmount = taxable * cgstRate / 100;
-      const sgstAmount = taxable * sgstRate / 100;
-      const gst = cgstAmount + sgstAmount;
-      const finalAmount = taxable + gst;
-
-      el("base").textContent = money(base);
-      el("adjustment").textContent = money(adjustment);
-      el("taxable").textContent = money(taxable);
-      el("cgstAmount").textContent = money(cgstAmount);
-      el("sgstAmount").textContent = money(sgstAmount);
-      el("gst").textContent = money(gst);
-      el("final").textContent = money(finalAmount);
-    }
-
-    ["mrp", "discount", "cgst", "sgst"].forEach(id =>
-      el(id).addEventListener("input", calculate)
-    );
-    calculate();
-  </script>
-</body>
-</html>
+<header><div><div class="eyebrow">Pharmacy billing · Live calculator</div><h1>Pharmacy GST Calculator</h1><p>Calculate GST-inclusive MRP, discount adjustment, taxable amount, GST, final amount and IP GST-included handling.</p></div></header>
+<main>
+<section class="card"><h2>1. Billing inputs</h2><p class="sub">MRP is the tax-inclusive amount retrieved from inventory field <code>unitmrp</code>. Results update as you type.</p>
+<div class="fields">
+<div class="field"><label for="mrp">MRP (₹)</label><input id="mrp" type="number" min="0" step="0.01" value="100" inputmode="decimal"><span class="hint">Price including GST</span></div>
+<div class="field"><label for="discount">Discount (%)</label><input id="discount" type="number" min="0" max="100" step="0.01" value="10" inputmode="decimal"><span class="hint">Applied to base charge</span></div>
+<div class="field"><label for="cgst">CGST (%)</label><input id="cgst" type="number" min="0" max="100" step="0.01" value="6" inputmode="decimal"></div>
+<div class="field"><label for="sgst">SGST (%)</label><input id="sgst" type="number" min="0" max="100" step="0.01" value="6" inputmode="decimal"></div>
+</div><div style="height:18px"></div><h2>2. IP GST-included configuration</h2><p class="sub">IP logic activates only when the setting is enabled and Encounter SubMode is IP.</p>
+<div class="mode-grid"><div class="switch"><input id="ipSetting" type="checkbox"><div><label for="ipSetting">IPPharmacyAmountGSTInclude = 1</label><small>Represents the genapsetting setting.</small></div></div><div class="field"><label for="encounter">Encounter SubMode</label><select id="encounter"><option value="OP">OP — Outpatient</option><option value="IP">IP — Inpatient</option></select></div></div>
+<div id="modeStatus" class="status" role="status" aria-live="polite">Standard GST calculation is active.</div><p class="note">When IP mode is active, effective tax percentages and GST amounts become zero. Entered tax rates remain available when the mode is disabled.</p>
+</section>
+<section class="card"><h2>3. Live calculation results</h2><p class="sub">Adjustment is displayed as a negative amount to match the database convention.</p>
+<div class="results">
+<div class="metric"><span>Base Charge</span><strong id="base">₹89.29</strong></div><div class="metric"><span>Adjustment / Discount</span><strong id="adjustment">−₹8.93</strong></div><div class="metric"><span>Taxable Amount</span><strong id="taxable">₹80.36</strong></div><div class="metric"><span>CGST Amount</span><strong id="cgstAmount">₹4.82</strong></div><div class="metric"><span>SGST Amount</span><strong id="sgstAmount">₹4.82</strong></div><div class="metric"><span>Total GST</span><strong id="gst">₹9.64</strong></div><div class="metric final"><span>Final Amount / Bill Amount</span><strong id="final">₹90.00</strong></div><div class="metric contract"><span>Contract Charge</span><strong id="contract">₹98.93</strong></div>
+</div><p id="contractNote" class="note">Contract Charge = Final Amount − Adjustment Amount. Since adjustment is negative, this adds it back.</p><div id="validation" class="status warn" style="display:none" role="alert"></div>
+</section>
+<section class="card"><h2>4. Formula reference</h2><p class="sub">Calculation order used by this calculator.</p><div class="table-wrap"><table><thead><tr><th>Step</th><th>Formula</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>1. Base Charge</td><td><code>MRP ÷ (1 + (CGST% + SGST%) ÷ 100)</code></td><td>Removes GST from MRP.</td></tr><tr><td>2. Adjustment</td><td><code>−Base × Discount% ÷ 100</code></td><td>Negative amount; zero when no discount.</td></tr><tr><td>3. Taxable Amount</td><td><code>Base + Adjustment</code></td><td>Discount is applied before tax.</td></tr><tr><td>4. CGST Amount</td><td><code>Taxable × CGST% ÷ 100</code></td><td>Central GST.</td></tr><tr><td>5. SGST Amount</td><td><code>Taxable × SGST% ÷ 100</code></td><td>State GST.</td></tr><tr><td>6. Total GST</td><td><code>CGST Amount + SGST Amount</code></td><td>Combined tax.</td></tr><tr><td>7. Final Amount</td><td><code>Taxable Amount + Total GST</code></td><td>Bill amount after discount and GST.</td></tr><tr><td>8. Contract Charge</td><td><code>Final Amount − Adjustment Amount</code></td><td>Specified contract-charge calculation.</td></tr>
+</tbody></table></div><div class="example"><strong>Example from the specification</strong><br>MRP ₹100.00 · CGST 6% · SGST 6% · Discount 10%<br>Base ₹89.29 · Adjustment −₹8.93 · Taxable ₹80.36 · CGST ₹4.82 · SGST ₹4.82 · Total GST ₹9.64 · Final ₹90.00</div>
+</section>
+<section class="card"><h2>5. IP GST-included handling</h2><p class="sub">Active only when <code>IPPharmacyAmountGSTInclude = 1</code> and <code>EncounterSubMode = IP</code>.</p><ul><li>Effective CGST and SGST percentages become 0%.</li><li>CGST, SGST and total GST amounts become ₹0.00.</li><li>Base Charge equals MRP because no GST is extracted.</li><li>Discount adjustment remains negative; taxable and final amounts reflect the discount.</li><li>Contract Charge = <code>Final Amount − Adjustment Amount</code>.</li></ul><p class="note">The document also says IP selling price should remain constant. This page follows the explicit formulas and contract-charge rule provided; confirm the exact production meaning of “Final Amount” for IP billing before financial sign-off.</p></section>
+</main><footer>Pharmacy Billing Calculator · Displayed amounts rounded to 2 decimal places.</footer>
+<script>
+'use strict';
+const el=id=>document.getElementById(id);
+const money=n=>n<0?'−₹'+Math.abs(n).toFixed(2):'₹'+n.toFixed(2);
+const read=id=>{const s=el(id).value.trim();if(s==='')return 0;const n=Number(s);return Number.isFinite(n)?n:NaN};
+const show=(id,v)=>el(id).textContent=v;
+function calculate(){
+ const mrp=read('mrp'),discountInput=read('discount'),cgstInput=read('cgst'),sgstInput=read('sgst');
+ const validation=el('validation');
+ if([mrp,discountInput,cgstInput,sgstInput].some(v=>!Number.isFinite(v)||v<0)||discountInput>100||cgstInput>100||sgstInput>100){validation.style.display='block';validation.textContent='Enter non-negative numeric values. Discount, CGST and SGST must each be between 0 and 100.';return}
+ validation.style.display='none';
+ const ipMode=el('ipSetting').checked&&el('encounter').value==='IP';
+ const cgstRate=ipMode?0:cgstInput,sgstRate=ipMode?0:sgstInput;
+ const base=mrp/(1+(cgstRate+sgstRate)/100);
+ const adjustment=-(base*discountInput/100);
+ const taxable=Math.max(0,base+adjustment);
+ const cgstAmount=taxable*cgstRate/100,sgstAmount=taxable*sgstRate/100;
+ const gst=cgstAmount+sgstAmount,finalAmount=taxable+gst,contractCharge=finalAmount-adjustment;
+ show('base',money(base));show('adjustment',money(adjustment));show('taxable',money(taxable));show('cgstAmount',money(cgstAmount));show('sgstAmount',money(sgstAmount));show('gst',money(gst));show('final',money(finalAmount));show('contract',money(contractCharge));
+ const status=el('modeStatus');if(ipMode){status.className='status active';status.textContent='IP GST-included mode ACTIVE: effective CGST/SGST rates and all GST amounts are 0.';el('contractNote').textContent='IP mode: Contract Charge = Final Amount − Adjustment Amount. Because adjustment is negative, it is added back.'}else{status.className='status';status.textContent='Standard GST calculation is active. GST is extracted from MRP, then discount is applied before GST is calculated.';el('contractNote').textContent='Contract Charge = Final Amount − Adjustment Amount. Since adjustment is negative, this adds it back.'}
+}
+['mrp','discount','cgst','sgst','ipSetting','encounter'].forEach(id=>{el(id).addEventListener('input',calculate);el(id).addEventListener('change',calculate)});calculate();
+</script></body></html>
